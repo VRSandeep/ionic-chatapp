@@ -5,6 +5,7 @@ io.on('connection', function(socket){
 	socket.on('join:room', function(data){
 		var room_name = data.room_name;
 		socket.join(room_name);
+		console.log('someone joined room ' + room_name + ' ' + socket.id);
 	});
 
 

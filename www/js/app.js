@@ -4,23 +4,23 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'LocalStorageModule', 'btford.socket-io', 'angularMoment'])
+angular.module('starter', ['ionic', 'LocalStorageModule', 'btford.socket-io', 'angularMoment', 'ui.router'])
 
-.run(function($ionicPlatform) {
+.run(function( $ionicPlatform) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
-     
+
 
     }
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-    
+
   });
 })
 
@@ -31,16 +31,43 @@ angular.module('starter', ['ionic', 'LocalStorageModule', 'btford.socket-io', 'a
     url: '/login',
     templateUrl: 'templates/login.html'
   })
-
+  .state('register', {
+    url: '/signup',
+    templateUrl: 'templates/register.html'
+  })
   .state('rooms', {
     url: '/rooms',
-    templateUrl: 'templates/rooms.html'
+    templateUrl: 'templates/rooms.html',
+    resolve: {
+      authorize: checkAuth
+    }
   })
 
   .state('room', {
     url: '/room',
-    templateUrl: 'templates/room.html'
+    templateUrl: 'templates/room.html',
+    resolve: {
+      authorize: checkAuth
+    }
   });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');
 });
+
+function checkAuth($q, AuthService, $state, $timeout) {
+  if (AuthService.isAuthenticated()) {
+    // Resolve the promise successfully
+    return $q.when();
+  } else {
+    // The next bit of code is asynchronously tricky.
+
+    $timeout(function() {
+      // This code runs after the authentication promise has been rejected.
+      // Go to the log-in page
+      $state.go('login');
+    })
+
+    // Reject the authentication promise to prevent the state from loading
+    return $q.reject();
+  }
+}

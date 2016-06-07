@@ -1,13 +1,13 @@
-(function(){
+// (function(){
 
-	angular.module('starter')
-	.service('SocketService', ['socketFactory', SocketService]);
+// 	angular.module('starter')
+// 	.service('SocketService', ['socketFactory', SocketService]);
 
-	function SocketService(socketFactory){
-		return socketFactory({
-			
-			ioSocket: io.connect('http://localhost:3000')
+// 	function SocketService(socketFactory){
+// 		return socketFactory({
 
-		});
-	}
-})();
+// 			ioSocket: io.connect('http://localhost:8000')
+
+// 		});
+// 	}
+// })();
