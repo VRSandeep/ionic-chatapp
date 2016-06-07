@@ -6,7 +6,12 @@
 
 		var me = this;
 		me.current_room = localStorageService.get('room');
-		me.rooms = ['Public', 'Room 1', 'Room 2'];
+		me.rooms = {
+			"Public": "public",
+			"Room 1": "room1",
+			"Room 2": "room2"
+		};
+
 
 		if (AuthService.isAuthenticated()) {
 			$state.go('rooms');
@@ -15,7 +20,6 @@
 
 		$scope.login = function(username, password){
 			AuthService.loginUser(username, password).then(function(data) {
-	            console.log(data);
 	            $state.go('rooms');
 	        }, function(error) {
 	        	console.error(error);
@@ -51,8 +55,6 @@
 			var room = {
 				'room_name': room_name
 			};
-
-			// SocketService.emit('join:room', room);
 
 			$state.go('room');
 		};

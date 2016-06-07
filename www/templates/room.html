@@ -3,22 +3,22 @@
  		<h1 class="title">{{ room_ctrl.current_room }}</h1>
  		<button class="button button-assertive" ng-click="leaveRoom()">Leave</button>
  	</header>
- 	
+
   <ion-content class="has-header padding">
-	
+
 	<div class="list" id="messages" ng-if="room_ctrl.messages.length > 0">
 	    <li class="item item-text-wrap no-border {{ isNotCurrentUser(msg.user) }}" ng-repeat="msg in room_ctrl.messages">
-	    	<div class="msg">	    		
-		    	<div class="details padding">	    		
+	    	<div class="msg">
+		    	<div class="details padding">
 					<p>
 						<div class="user">{{ msg.user }}</div>
-						<div class="message">{{ msg.text }}</div>
+						<div class="message">{{ msg.content }}</div>
 					</p>
-					<small>{{ humanize(msg.time) }}</small>	
+					<small>{{ humanize(msg.created) }}</small>
 		    	</div>
 	    	</div>
 	    </li>
-	</div>	
+	</div>
 
 	<div class="card" ng-if="!room_ctrl.messages.length">
 	  <div class="item item-text-wrap">
@@ -33,7 +33,8 @@
     <label class="item-input-wrapper">
       <input type="text" id="message" name="message" ng-model="room_ctrl.message" placeholder="Type message">
     </label>
-   	<a class="button button-icon icon ion-android-send" ng-click="sendTextMessage()"></a>
+   	<!-- <a class="button button-icon icon ion-android-send" ng-click="sendTextMessage()"></a> -->
+    <a class="button button-icon icon ion-android-send" ng-click="submit()"></a>
 </footer>
 
 </ion-view>

@@ -8,8 +8,9 @@
                 "username": name,
                 "password": pw
             }).then(function(response) {
+                console.log(response);
                 localStorageService.set('username', name);
-                localStorageService.set('token', response.key);
+                localStorageService.set('token', response.data.key);
             }, function(response) {
                 return $q.reject(response.data);
             });
@@ -21,13 +22,13 @@
                 "password": pw
             }).then(function(response) {
                 localStorageService.set('username', name);
-                localStorageService.set('token', response.key);
+                localStorageService.set('token', response.data.key);
             }, function(response) {
                 return $q.reject(response.data);
             });
         };
         authservice.isAuthenticated = function () {
-            if (localStorageService.get('username') && localStorageService.get('username') != '' && localStorageService.get('token') != ''  ) {
+            if (localStorageService.get('username') && localStorageService.get('username') != '' && localStorageService.get('token') && localStorageService.get('token') != ''  ) {
                 return true;
             } return false;
         };

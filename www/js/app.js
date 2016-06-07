@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'LocalStorageModule', 'btford.socket-io', 'angularMoment', 'ui.router'])
+angular.module('starter', ['ionic', 'LocalStorageModule', 'ngWebSocket', 'angularMoment', 'ui.router'])
 
 .run(function( $ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -24,7 +24,7 @@ angular.module('starter', ['ionic', 'LocalStorageModule', 'btford.socket-io', 'a
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
   $stateProvider
 
   .state('login', {
@@ -52,6 +52,24 @@ angular.module('starter', ['ionic', 'LocalStorageModule', 'btford.socket-io', 'a
   });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');
+  $httpProvider.interceptors.push(function($q,$location, $timeout, localStorageService) {
+      return {
+          'request': function (config) {
+              config.headers = config.headers || {};
+              if (localStorageService.get('username') && localStorageService.get('username') != '' && localStorageService.get('token') && localStorageService.get('token') != ''  ) {
+                  config.headers.Authorization = "Token " + localStorageService.get('token');
+              }
+              return config;
+          },
+          'responseError': function(response) {
+              if(response.status === 401 || response.status === 403) {
+                  $timeout($location.path('/#/login'), 50);
+              }
+              return $q.reject(response);
+          }
+      };
+  });
+
 });
 
 function checkAuth($q, AuthService, $state, $timeout) {
@@ -59,11 +77,7 @@ function checkAuth($q, AuthService, $state, $timeout) {
     // Resolve the promise successfully
     return $q.when();
   } else {
-    // The next bit of code is asynchronously tricky.
-
     $timeout(function() {
-      // This code runs after the authentication promise has been rejected.
-      // Go to the log-in page
       $state.go('login');
     })
 
