@@ -2,31 +2,23 @@
 	angular.module('starter')
 	.controller('RoomController', RoomController);
 
-	function RoomController($scope, $state, $ionicScrollDelegate, $ionicPopup, $http, localStorageService, SocketService, moment){
+	function RoomController($scope, $state, $ionicScrollDelegate, $ionicPopup, $http, $websocket, localStorageService, moment){
 
 		var me = this;
 
 		me.messages = [];
-		$scope.username = 'anonymous';
 
 		me.current_room = localStorageService.get('room');
-		// $scope.Messages = SocketService;
 
-		$scope.submit = function() {
-			SocketService.project(me.current_room).send({
-				username: $scope.username,
-				message: me.message
-			});
-			// $scope.new_message = '';
-		};
+		if (!me.current_room) {
+			$state.go('rooms');
+		}
+
 		$scope.getHistory = function(room) {
-			// Fetch messages from server and populate me.messages
-			// me.messages.push()
+			// Fetch messages from server and populate chat
 			$http.get('http://localhost:8000/room/' + room + '/').then(function(response){
-				// console.log(response.data);
 				me.messages = response.data.reverse();
 				$ionicScrollDelegate.scrollBottom();
-				console.log(me.messages);
 			}, function(error){
 				console.error(error);
 				$ionicPopup.alert({
@@ -47,45 +39,57 @@
 			return 'current-user';
 		};
 
+		var ws = $websocket('ws://localhost:8000/chat/' + me.current_room + '/');
 
-		// $scope.sendTextMessage = function(){
+		ws.onOpen(function() {
+		    console.log('connection open');
+		});
 
-		// 	var msg = {
-		// 		'room': me.current_room,
-		// 		'user': current_user,
-		// 		'text': me.message,
-		// 		'time': moment()
-		// 	};
+		$scope.submit = function() {
 
+			$ionicScrollDelegate.scrollBottom();
+			ws.send({
+				"user": current_user,
+				"content": me.message
+			});
+			me.message = "";
+		};
 
-		// 	me.messages.push(msg);
-		// 	$ionicScrollDelegate.scrollBottom();
+		ws.onMessage(function(event) {
+		    console.log('message: ', event);
+		    var res;
+		    try {
+		        res = JSON.parse(event.data);
+		    } catch(e) {
+		        res = {'username': 'anonymous', 'message': event.data};
+		    }
 
-		// 	me.message = '';
+		    me.messages.push({
+		        "user": res.user,
+		        "content": res.content,
+		        "created": event.created
+		    });
+		    $ionicScrollDelegate.scrollBottom();
+		});
 
-		// 	SocketService.emit('send:message', msg);
-		// };
+		$scope.leaveRoom = function(){
 
+			var msg = {
+				"user": current_user,
+				"room": me.current_room,
+				// "time": moment()
+			};
+			ws.close();
+			$state.go('rooms');
+		};
 
-		// $scope.leaveRoom = function(){
+		ws.onError(function(event) {
+		  	console.log('connection Error', event);
+		});
 
-		// 	var msg = {
-		// 		'user': current_user,
-		// 		'room': me.current_room,
-		// 		'time': moment()
-		// 	};
-
-		// 	SocketService.emit('leave:room', msg);
-		// 	$state.go('rooms');
-
-		// };
-
-
-		// SocketService.on('message', function(msg){
-		// 	me.messages.push(msg);
-		// 	$ionicScrollDelegate.scrollBottom();
-		// });
-
+		ws.onClose(function(event) {
+		  	console.log('connection closed', event);
+		});
 
 	}
 

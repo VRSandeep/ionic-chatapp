@@ -1,8 +1,8 @@
 <ion-view title="{{ room_ctrl.current_room }}" ng-controller="RoomController as room_ctrl">
- 	<header class="bar bar-header bar-positive">
+ 	<!-- <ion-content class="bar bar-header bar-positive">
  		<h1 class="title">{{ room_ctrl.current_room }}</h1>
  		<button class="button button-assertive" ng-click="leaveRoom()">Leave</button>
- 	</header>
+ 	</ion-content> -->
 
   <ion-content class="has-header padding">
 
@@ -14,7 +14,7 @@
 						<div class="user">{{ msg.user }}</div>
 						<div class="message">{{ msg.content }}</div>
 					</p>
-					<small>{{ humanize(msg.created) }}</small>
+                    <small><span am-time-ago="msg.created"></span></small>
 		    	</div>
 	    	</div>
 	    </li>
@@ -31,9 +31,8 @@
 
 <footer class="bar bar-footer bar-positive item-input-inset has-content">
     <label class="item-input-wrapper">
-      <input type="text" id="message" name="message" ng-model="room_ctrl.message" placeholder="Type message">
+      <input type="text" id="message" name="message" ng-model="room_ctrl.message" placeholder="Type message" ng-enter="submit()">
     </label>
-   	<!-- <a class="button button-icon icon ion-android-send" ng-click="sendTextMessage()"></a> -->
     <a class="button button-icon icon ion-android-send" ng-click="submit()"></a>
 </footer>
 

@@ -5,7 +5,8 @@
 	function HomeController($scope, $state, $timeout,$ionicPopup, $ionicLoading, $ionicHistory, localStorageService, AuthService){
 
 		var me = this;
-		me.current_room = localStorageService.get('room');
+		// me.current_room = localStorageService.get('room');
+		localStorageService.remove('room');
 		me.rooms = {
 			"Public": "public",
 			"Room 1": "room1",
@@ -52,9 +53,9 @@
 			me.current_room = room_name;
 			localStorageService.set('room', room_name);
 
-			var room = {
-				'room_name': room_name
-			};
+			// var room = {
+			// 	'room_name': room_name
+			// };
 
 			$state.go('room');
 		};
