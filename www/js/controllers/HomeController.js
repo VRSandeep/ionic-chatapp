@@ -4,19 +4,20 @@
 
 	function HomeController($scope, $state, $timeout,$ionicPopup, $ionicLoading, $ionicHistory, localStorageService, AuthService){
 
+		if (AuthService.isAuthenticated()) {
+			$state.go('rooms');
+		}
+
 		var me = this;
-		// me.current_room = localStorageService.get('room');
+
 		localStorageService.remove('room');
+		localStorageService.remove('room-title');
 		me.rooms = {
 			"Public": "public",
 			"Room 1": "room1",
 			"Room 2": "room2"
 		};
 
-
-		if (AuthService.isAuthenticated()) {
-			$state.go('rooms');
-		}
 		me.show_login_form = true;
 
 		$scope.login = function(username, password){
@@ -27,6 +28,17 @@
 	            $ionicPopup.alert({
 	                title: 'Login failed!',
 	                template: 'Please check your credentials!'
+	            });
+	        });
+		};
+		$scope.register = function(username, password){
+			AuthService.registerUser(username, password).then(function(data) {
+	            $state.go('rooms');
+	        }, function(error) {
+	        	console.error(error);
+	            $ionicPopup.alert({
+	                title: 'Registration failed!',
+	                template: 'Username is already taken. Please select another username!'
 	            });
 	        });
 		};
@@ -50,8 +62,9 @@
 
 		$scope.enterRoom = function(room_name){
 
-			me.current_room = room_name;
-			localStorageService.set('room', room_name);
+			// me.current_room = room_name;
+			localStorageService.set('room', me.rooms[room_name]);
+			localStorageService.set('room-title', room_name);
 
 			// var room = {
 			// 	'room_name': room_name

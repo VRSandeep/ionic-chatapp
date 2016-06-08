@@ -6,7 +6,7 @@
 
   <ion-content class="has-header padding">
 	<div class="card" ng-repeat="(room, value) in home_ctrl.rooms">
-	  <div class="item item-text-wrap text-center" ng-click="enterRoom('{{value}}')">
+	  <div class="item item-text-wrap text-center" ng-click="enterRoom('{{room}}')">
 	    <strong>{{room}}</strong>
 	  </div>
 	</div>

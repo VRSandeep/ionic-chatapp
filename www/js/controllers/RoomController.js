@@ -2,17 +2,22 @@
 	angular.module('starter')
 	.controller('RoomController', RoomController);
 
-	function RoomController($scope, $state, $ionicScrollDelegate, $ionicPopup, $http, $websocket, localStorageService, moment){
+	function RoomController($scope, $state, $ionicScrollDelegate, $ionicPopup, $http, $websocket, localStorageService, moment, AuthService){
 
+		if (!AuthService.isAuthenticated) {
+			$state.go('login');
+		}
 		var me = this;
 
 		me.messages = [];
 
 		me.current_room = localStorageService.get('room');
+		me.current_room_title = localStorageService.get('room-title');
 
 		if (!me.current_room) {
 			$state.go('rooms');
 		}
+
 
 		$scope.getHistory = function(room) {
 			// Fetch messages from server and populate chat
@@ -30,6 +35,7 @@
 		$scope.getHistory(me.current_room);
 
 		var current_user = localStorageService.get('username');
+		var token = localStorageService.get('token');
 
 		$scope.isNotCurrentUser = function(user){
 
@@ -39,7 +45,7 @@
 			return 'current-user';
 		};
 
-		var ws = $websocket('ws://localhost:8000/chat/' + me.current_room + '/');
+		var ws = $websocket('ws://localhost:8000/chat/' + me.current_room + '/?token=' + token);
 
 		ws.onOpen(function() {
 		    console.log('connection open');
@@ -50,7 +56,8 @@
 			$ionicScrollDelegate.scrollBottom();
 			ws.send({
 				"user": current_user,
-				"content": me.message
+				"content": me.message,
+				"token": token
 			});
 			me.message = "";
 		};

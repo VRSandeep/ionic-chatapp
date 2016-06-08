@@ -38,20 +38,20 @@ angular.module('starter', ['ionic', 'LocalStorageModule', 'ngWebSocket', 'angula
   .state('rooms', {
     url: '/rooms',
     templateUrl: 'templates/rooms.html',
-    resolve: {
-      authorize: checkAuth
-    }
+    // resolve: {
+    //   authorize: checkAuth
+    // }
   })
 
   .state('room', {
     url: '/room',
     templateUrl: 'templates/room.html',
-    resolve: {
-      authorize: checkAuth
-    }
+    // resolve: {
+    //   authorize: checkAuth
+    // }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/login');
+  $urlRouterProvider.otherwise('/rooms');
   $httpProvider.interceptors.push(function($q,$location, $timeout, localStorageService) {
       return {
           'request': function (config) {
@@ -72,16 +72,16 @@ angular.module('starter', ['ionic', 'LocalStorageModule', 'ngWebSocket', 'angula
 
 });
 
-function checkAuth($q, AuthService, $state, $timeout) {
-  if (AuthService.isAuthenticated()) {
-    // Resolve the promise successfully
-    return $q.when();
-  } else {
-    $timeout(function() {
-      $state.go('login');
-    })
+// function checkAuth($q, AuthService, $state, $timeout) {
+//   if (AuthService.isAuthenticated()) {
+//     // Resolve the promise successfully
+//     return $q.when();
+//   } else {
+//     $timeout(function() {
+//       $state.go('login');
+//     })
 
-    // Reject the authentication promise to prevent the state from loading
-    return $q.reject();
-  }
-}
+//     // Reject the authentication promise to prevent the state from loading
+//     return $q.reject();
+//   }
+// }
