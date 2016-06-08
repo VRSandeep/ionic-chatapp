@@ -1,5 +1,5 @@
 # Cordova Chatapp
-A real time chat app built using Ionic framework and Websockets
+A real time chat app built using Ionic framework and Websockets. This is built to be used with https://github.com/VRSandeep/Django-chat
 
 Forked from https://github.com/anchetaWern/cordova-chatapp
 
