@@ -7,7 +7,9 @@
 		if (AuthService.isAuthenticated()) {
 			$state.go('rooms');
 		} else {
-			$state.go('login');
+			if ($state.current.name !='register') {
+				$state.go('login');
+			}
 		}
 
 		var me = this;
