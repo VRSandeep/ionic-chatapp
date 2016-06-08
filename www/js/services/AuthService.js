@@ -30,7 +30,9 @@
         authservice.isAuthenticated = function () {
             if (localStorageService.get('username') && localStorageService.get('username') != '' && localStorageService.get('token') && localStorageService.get('token') != ''  ) {
                 return true;
-            } return false;
+            } else{
+                return false;
+            }
         };
         authservice.logout = function () {
             return localStorageService.clearAll();

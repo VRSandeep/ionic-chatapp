@@ -1,9 +1,3 @@
-// Ionic Starter App
-
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'LocalStorageModule', 'ngWebSocket', 'angularMoment', 'ui.router'])
 
 .run(function( $ionicPlatform) {
@@ -36,22 +30,18 @@ angular.module('starter', ['ionic', 'LocalStorageModule', 'ngWebSocket', 'angula
     templateUrl: 'templates/register.html'
   })
   .state('rooms', {
-    url: '/rooms',
-    templateUrl: 'templates/rooms.html',
-    // resolve: {
-    //   authorize: checkAuth
-    // }
+    url: '/room',
+    templateUrl: 'templates/rooms.html'
   })
 
   .state('room', {
-    url: '/room',
-    templateUrl: 'templates/room.html',
-    // resolve: {
-    //   authorize: checkAuth
-    // }
+    url: '/room/:roomid',
+    templateUrl: 'templates/room.html'
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/rooms');
+  $urlRouterProvider.otherwise('/room');
+
+  // Add Token Authentication header to all HTTP requests
   $httpProvider.interceptors.push(function($q,$location, $timeout, localStorageService) {
       return {
           'request': function (config) {
@@ -63,7 +53,7 @@ angular.module('starter', ['ionic', 'LocalStorageModule', 'ngWebSocket', 'angula
           },
           'responseError': function(response) {
               if(response.status === 401 || response.status === 403) {
-                  $timeout($location.path('/#/login'), 50);
+                  $location.path('login')
               }
               return $q.reject(response);
           }
@@ -71,17 +61,3 @@ angular.module('starter', ['ionic', 'LocalStorageModule', 'ngWebSocket', 'angula
   });
 
 });
-
-// function checkAuth($q, AuthService, $state, $timeout) {
-//   if (AuthService.isAuthenticated()) {
-//     // Resolve the promise successfully
-//     return $q.when();
-//   } else {
-//     $timeout(function() {
-//       $state.go('login');
-//     })
-
-//     // Reject the authentication promise to prevent the state from loading
-//     return $q.reject();
-//   }
-// }

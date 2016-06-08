@@ -1,22 +1,22 @@
 <ion-view view-title="Register" name="login-view" ng-controller="HomeController as home_ctrl">
-   <ion-content class="has-header padding">
-       <div class="list list-inset">
-           <label class="item item-input">
-               <input type="text" ng-model="home_ctrl.username" placeholder="Username" required>
-           </label>
-           <label class="item item-input">
-                <input type="password" ng-model="home_ctrl.password" placeholder="Password" required>
-           </label>
-           <label class="item item-input">
-                <input type="password" ng-model="home_ctrl.confirm_password" placeholder="Confirm Password" required>
-           </label>
-           <span ng-show="home_ctrl.password !== home_ctrl.confirm_password">Password mismatch</span>
-       </div>
-       <button class="button button-block button-calm" ng-click="register(home_ctrl.username, home_ctrl.password)" ng-disabled="home_ctrl.password !== home_ctrl.confirm_password">Register</button>
-       <div class="card" ng-click="goto('login')">
-         <div class="item item-text-wrap text-center" >
-           <strong>Login</strong>
-         </div>
-       </div>
-   </ion-content>
+  <ion-content class="has-header padding">
+    <div class="list list-inset">
+      <label class="item item-input">
+      <input type="text" ng-model="home_ctrl.username" placeholder="Username" required>
+      </label>
+      <label class="item item-input">
+      <input type="password" ng-model="home_ctrl.password" placeholder="Password" required>
+      </label>
+      <label class="item item-input">
+      <input type="password" ng-model="home_ctrl.confirm_password" placeholder="Confirm Password" required>
+      </label>
+      <span ng-show="home_ctrl.password !== home_ctrl.confirm_password">Password mismatch</span>
+    </div>
+    <button class="button button-block button-calm" ng-click="register(home_ctrl.username, home_ctrl.password)" ng-disabled="home_ctrl.password !== home_ctrl.confirm_password">Register</button>
+    <div class="card" ng-click="goto('login')">
+      <div class="item item-text-wrap text-center" >
+        <strong>Login</strong>
+      </div>
+     </div>
+  </ion-content>
  </ion-view>

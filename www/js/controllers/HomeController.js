@@ -6,6 +6,8 @@
 
 		if (AuthService.isAuthenticated()) {
 			$state.go('rooms');
+		} else {
+			$state.go('login');
 		}
 
 		var me = this;
@@ -70,7 +72,7 @@
 			// 	'room_name': room_name
 			// };
 
-			$state.go('room');
+			$state.go('room', {"roomid": me.rooms[room_name]});
 		};
 
 	}

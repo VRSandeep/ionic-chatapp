@@ -4,7 +4,7 @@
 
 	function RoomController($scope, $state, $ionicScrollDelegate, $ionicPopup, $http, $websocket, localStorageService, moment, AuthService){
 
-		if (!AuthService.isAuthenticated) {
+		if (!AuthService.isAuthenticated()) {
 			$state.go('login');
 		}
 		var me = this;
@@ -80,14 +80,17 @@
 		});
 
 		$scope.leaveRoom = function(){
-
 			var msg = {
 				"user": current_user,
 				"room": me.current_room,
-				// "time": moment()
 			};
 			ws.close();
+			localStorageService.remove('room');
+			localStorageService.remove('room-title');
 			$state.go('rooms');
+		};
+		$scope.clearChat = function() {
+			me.messages = [];
 		};
 
 		ws.onError(function(event) {
